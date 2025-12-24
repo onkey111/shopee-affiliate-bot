@@ -22,3 +22,7 @@ Thumbs.db
 
 # Plans (nếu không cần track)
 # plans/
+
+# Sensitive files - KHÔNG COMMIT!
+.cookies.json
+.browser-session.json

@@ -1,0 +1,130 @@
+[
+  {
+    "domain": ".shopee.vn",
+    "name": "csrftoken",
+    "path": "/",
+    "value": "YOUR_CSRF_TOKEN_HERE",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_EC",
+    "path": "/",
+    "value": "YOUR_SPC_EC_VALUE_HERE",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_F",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_R_T_ID",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_R_T_IV",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_SI",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_ST",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_T_ID",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_T_IV",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": true
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_U",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": true,
+    "httpOnly": false
+  },
+  {
+    "domain": ".shopee.vn",
+    "name": "SPC_CLIENTID",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "affiliate.shopee.vn",
+    "name": "_QPWSDCXHZQA",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "affiliate.shopee.vn",
+    "name": "_sapid",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "affiliate.shopee.vn",
+    "name": "ds",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "affiliate.shopee.vn",
+    "name": "language",
+    "path": "/",
+    "value": "vi",
+    "secure": false,
+    "httpOnly": false
+  },
+  {
+    "domain": "affiliate.shopee.vn",
+    "name": "shopee_webUnique_ccd",
+    "path": "/",
+    "value": "YOUR_VALUE_HERE",
+    "secure": false,
+    "httpOnly": false
+  }
+]
