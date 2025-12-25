@@ -4,25 +4,25 @@
  * 1. Browser instance pooling with WebSocket endpoint persistence
  * 2. Batch cookie setting
  * 3. Request interception (block images, fonts, analytics)
- * 4. domcontentloaded instead of networkidle2
- * 5. CSS selectors instead of XPath
- * 6. Direct value setting via evaluate
- * 7. No unnecessary delays
- * 8. Optimized DOM querying
- * 9. Configurable headless mode
- * 10. Performance browser args
- * 11. Cookies loaded from external file (.cookies.json) for security
+ * 4. CSS selectors instead of XPath
+ * 5. No unnecessary delays
+ * 6. Optimized DOM querying
+ * 7. Headless mode with stealth plugin for anti-bot bypass
+ * 8. Performance browser args
+ * 9. Cookies loaded from external file (.cookies.json) for security
  */
 
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs');
 const path = require('path');
 
+// Apply stealth plugin to bypass bot detection
+puppeteer.use(StealthPlugin());
+
 // Configuration
 const CONFIG = {
-    // Note: headless mode may not work due to Shopee's anti-bot detection
-    // Set to false for reliable operation, or 'new' to try new headless mode
-    headless: false,
+    headless: true,  // Now works with stealth plugin
     sessionFile: path.join(__dirname, '.browser-session.json'),
     cookiesFile: path.join(__dirname, '.cookies.json'),
     sessionMaxAge: 3600000, // 1 hour
