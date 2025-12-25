@@ -1,0 +1,98 @@
+<h2 class="mb-4">Chi tiet User #<%= user.id %></h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">Thong tin co ban</div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr><td>Telegram ID:</td><td><code><%= user.telegram_id %></code></td></tr>
+                    <tr><td>Username:</td><td>@<%= user.telegram_username || '-' %></td></tr>
+                    <tr><td>Ten:</td><td><%= user.telegram_first_name %></td></tr>
+                    <tr><td>Ma gioi thieu:</td><td><code><%= user.ref_code %></code></td></tr>
+                    <tr><td>So du:</td><td><strong><%= new Intl.NumberFormat('vi-VN').format(user.balance) %>d</strong></td></tr>
+                    <tr><td>Tong link:</td><td><%= user.total_links %></td></tr>
+                    <tr><td>Ngay tao:</td><td><%= new Date(user.created_at).toLocaleString('vi-VN') %></td></tr>
+                </table>
+            </div>
+        </div>
+        
+        <% if (bankAccount) { %>
+        <div class="card mb-4">
+            <div class="card-header">Tai khoan ngan hang</div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr><td>Ngan hang:</td><td><%= bankAccount.bank_name %></td></tr>
+                    <tr><td>So TK:</td><td><code><%= bankAccount.account_number %></code></td></tr>
+                    <tr><td>Chu TK:</td><td><%= bankAccount.account_holder %></td></tr>
+                </table>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">Don hang gan day</div>
+            <div class="card-body">
+                <% if (orders.length === 0) { %>
+                    <p class="text-muted">Chua co don hang</p>
+                <% } else { %>
+                <table class="table table-sm">
+                    <thead><tr><th>Ma don</th><th>Trang thai</th><th>Hoa hong</th></tr></thead>
+                    <tbody>
+                        <% orders.forEach(o => { %>
+                        <tr>
+                            <td><code><%= o.shopee_order_id.slice(-8) %></code></td>
+                            <td>
+                                <% if (o.status === 'approved') { %>
+                                    <span class="badge bg-success">Duyet</span>
+                                <% } else if (o.status === 'rejected') { %>
+                                    <span class="badge bg-danger">Tu choi</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning">Cho</span>
+                                <% } %>
+                            </td>
+                            <td><%= o.user_commission ? new Intl.NumberFormat('vi-VN').format(o.user_commission) + 'd' : '-' %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">Rut tien gan day</div>
+            <div class="card-body">
+                <% if (withdrawals.length === 0) { %>
+                    <p class="text-muted">Chua co yeu cau rut tien</p>
+                <% } else { %>
+                <table class="table table-sm">
+                    <thead><tr><th>So tien</th><th>Trang thai</th><th>Ngay</th></tr></thead>
+                    <tbody>
+                        <% withdrawals.forEach(w => { %>
+                        <tr>
+                            <td><%= new Intl.NumberFormat('vi-VN').format(w.amount) %>d</td>
+                            <td>
+                                <% if (w.status === 'completed') { %>
+                                    <span class="badge bg-success">Hoan thanh</span>
+                                <% } else if (w.status === 'rejected') { %>
+                                    <span class="badge bg-danger">Tu choi</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning">Cho</span>
+                                <% } %>
+                            </td>
+                            <td><%= new Date(w.created_at).toLocaleDateString('vi-VN') %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="/admin/users" class="btn btn-secondary mt-3"><i class="bi bi-arrow-left"></i> Quay lai</a>
+

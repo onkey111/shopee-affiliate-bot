@@ -1,0 +1,39 @@
+<h2 class="mb-4">Danh sach Users</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Telegram</th>
+                <th>Ten</th>
+                <th>Ma ref</th>
+                <th>So du</th>
+                <th>Don hang</th>
+                <th>Gioi thieu</th>
+                <th>Ngay tao</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <tr>
+                <td>#<%= user.id %></td>
+                <td>@<%= user.telegram_username || '-' %></td>
+                <td><%= user.telegram_first_name %></td>
+                <td><code><%= user.ref_code %></code></td>
+                <td><%= new Intl.NumberFormat('vi-VN').format(user.balance) %>d</td>
+                <td><%= user.order_count || 0 %></td>
+                <td><%= user.referral_count || 0 %></td>
+                <td><%= new Date(user.created_at).toLocaleDateString('vi-VN') %></td>
+                <td>
+                    <a href="/admin/users/<%= user.id %>" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+

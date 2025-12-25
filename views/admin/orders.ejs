@@ -1,0 +1,92 @@
+<h2 class="mb-4">Don hang cho duyet</h2>
+
+<% if (orders.length === 0) { %>
+    <div class="alert alert-info">Khong co don hang nao cho duyet.</div>
+<% } else { %>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Ma don Shopee</th>
+                <th>Ngay tao</th>
+                <th>Hanh dong</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+            <tr>
+                <td>#<%= order.id %></td>
+                <td>
+                    <a href="/admin/users/<%= order.user_id %>">
+                        <%= order.telegram_first_name || order.telegram_username || 'User' %>
+                    </a>
+                </td>
+                <td><code><%= order.shopee_order_id %></code></td>
+                <td><%= new Date(order.created_at).toLocaleString('vi-VN') %></td>
+                <td>
+                    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveModal<%= order.id %>">
+                        <i class="bi bi-check"></i> Duyet
+                    </button>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal<%= order.id %>">
+                        <i class="bi bi-x"></i> Tu choi
+                    </button>
+                </td>
+            </tr>
+            
+            <!-- Approve Modal -->
+            <div class="modal fade" id="approveModal<%= order.id %>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="/admin/orders/<%= order.id %>/approve">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Duyet don hang #<%= order.id %></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Ma don: <strong><%= order.shopee_order_id %></strong></p>
+                                <div class="mb-3">
+                                    <label class="form-label">Tong hoa hong (VND)</label>
+                                    <input type="number" name="commission" class="form-control" required min="1000" placeholder="VD: 50000">
+                                    <small class="text-muted">User nhan 40%, Nguoi gioi thieu 10%, Owner 50%</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huy</button>
+                                <button type="submit" class="btn btn-success">Duyet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reject Modal -->
+            <div class="modal fade" id="rejectModal<%= order.id %>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="/admin/orders/<%= order.id %>/reject">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Tu choi don hang #<%= order.id %></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Ly do (tuy chon)</label>
+                                    <textarea name="note" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huy</button>
+                                <button type="submit" class="btn btn-danger">Tu choi</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+<% } %>
+

@@ -1,0 +1,78 @@
+<h2 class="mb-4">Yeu cau rut tien</h2>
+
+<% if (withdrawals.length === 0) { %>
+    <div class="alert alert-info">Khong co yeu cau rut tien nao.</div>
+<% } else { %>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>So tien</th>
+                <th>Ngan hang</th>
+                <th>So TK</th>
+                <th>Chu TK</th>
+                <th>Ngay tao</th>
+                <th>Hanh dong</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% withdrawals.forEach(w => { %>
+            <tr>
+                <td>#<%= w.id %></td>
+                <td>
+                    <a href="/admin/users/<%= w.user_id %>">
+                        <%= w.telegram_first_name || w.telegram_username || 'User' %>
+                    </a>
+                </td>
+                <td><strong><%= new Intl.NumberFormat('vi-VN').format(w.amount) %>d</strong></td>
+                <td><%= w.bank_name %></td>
+                <td><code><%= w.account_number %></code></td>
+                <td><%= w.account_holder %></td>
+                <td><%= new Date(w.created_at).toLocaleString('vi-VN') %></td>
+                <td>
+                    <form method="POST" action="/admin/withdrawals/<%= w.id %>/complete" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Xac nhan da chuyen tien?')">
+                            <i class="bi bi-check"></i> Hoan thanh
+                        </button>
+                    </form>
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal<%= w.id %>">
+                        <i class="bi bi-x"></i> Tu choi
+                    </button>
+                </td>
+            </tr>
+            
+            <!-- Reject Modal -->
+            <div class="modal fade" id="rejectModal<%= w.id %>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="/admin/withdrawals/<%= w.id %>/reject">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Tu choi rut tien #<%= w.id %></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>So tien: <strong><%= new Intl.NumberFormat('vi-VN').format(w.amount) %>d</strong></p>
+                                <div class="mb-3">
+                                    <label class="form-label">Ly do</label>
+                                    <textarea name="note" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i> So du se duoc hoan lai cho user.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huy</button>
+                                <button type="submit" class="btn btn-danger">Tu choi</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+<% } %>
+

@@ -1,0 +1,69 @@
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <h6 class="text-muted">Tong Users</h6>
+                <h3><%= stats.totalUsers || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <h6 class="text-muted">Don hang cho duyet</h6>
+                <h3><%= stats.pendingOrders || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h6 class="text-muted">Don hang da duyet</h6>
+                <h3><%= stats.approvedOrders || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <h6 class="text-muted">Rut tien cho xu ly</h6>
+                <h3><%= stats.pendingWithdrawals || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h6 class="text-muted">Tong hoa hong</h6>
+                <h3><%= new Intl.NumberFormat('vi-VN').format(stats.totalCommission || 0) %>d</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <h6 class="text-muted">Da chi tra</h6>
+                <h3><%= new Intl.NumberFormat('vi-VN').format(stats.totalPaid || 0) %>d</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Hanh dong nhanh</div>
+            <div class="card-body">
+                <a href="/admin/orders" class="btn btn-warning me-2">
+                    <i class="bi bi-box"></i> Duyet don hang (<%= stats.pendingOrders || 0 %>)
+                </a>
+                <a href="/admin/withdrawals" class="btn btn-danger">
+                    <i class="bi bi-cash"></i> Xu ly rut tien (<%= stats.pendingWithdrawals || 0 %>)
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
