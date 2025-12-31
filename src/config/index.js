@@ -41,6 +41,9 @@ module.exports = {
     ngrok: {
         authtoken: process.env.NGROK_AUTHTOKEN
     },
+    webhook: {
+        url: process.env.WEBHOOK_URL
+    },
     limits: {
         dailyLinks: 5,
         minWithdraw: 100000
