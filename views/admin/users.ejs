@@ -1,5 +1,9 @@
 <h2 class="mb-4">Danh sach Users</h2>
 
+<div class="alert alert-info">
+    <strong>Gioi han mac dinh:</strong> <%= globalDailyLimit %> link/ngay
+</div>
+
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -9,6 +13,7 @@
                 <th>Ten</th>
                 <th>Ma ref</th>
                 <th>So du</th>
+                <th>Gioi han/ngay</th>
                 <th>Don hang</th>
                 <th>Gioi thieu</th>
                 <th>Ngay tao</th>
@@ -23,6 +28,15 @@
                 <td><%= user.telegram_first_name %></td>
                 <td><code><%= user.ref_code %></code></td>
                 <td><%= new Intl.NumberFormat('vi-VN').format(user.balance) %>d</td>
+                <td>
+                    <% if (user.daily_link_limit === null || user.daily_link_limit === undefined) { %>
+                        <span class="badge bg-secondary">Mac dinh (<%= globalDailyLimit %>)</span>
+                    <% } else if (user.daily_link_limit === 0) { %>
+                        <span class="badge bg-success">Khong gioi han</span>
+                    <% } else { %>
+                        <span class="badge bg-primary"><%= user.daily_link_limit %></span>
+                    <% } %>
+                </td>
                 <td><%= user.order_count || 0 %></td>
                 <td><%= user.referral_count || 0 %></td>
                 <td><%= new Date(user.created_at).toLocaleDateString('vi-VN') %></td>

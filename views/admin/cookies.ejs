@@ -1,0 +1,82 @@
+<h2 class="mb-4"><i class="bi bi-cookie me-2"></i>Quan ly Cookies</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-info-circle me-2"></i>Trang thai hien tai
+            </div>
+            <div class="card-body">
+                <% if (status.exists) { %>
+                    <div class="alert alert-success mb-3">
+                        <i class="bi bi-check-circle me-2"></i>File cookies da duoc cau hinh
+                    </div>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>So luong cookies:</th>
+                            <td><span class="badge bg-primary"><%= status.cookieCount %></span></td>
+                        </tr>
+                        <tr>
+                            <th>Kich thuoc file:</th>
+                            <td><%= (status.fileSize / 1024).toFixed(2) %> KB</td>
+                        </tr>
+                        <tr>
+                            <th>Cap nhat lan cuoi:</th>
+                            <td><%= new Date(status.lastModified).toLocaleString('vi-VN') %></td>
+                        </tr>
+                    </table>
+                <% } else { %>
+                    <div class="alert alert-warning mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <% if (status.error) { %>
+                            Loi doc file: <%= status.error %>
+                        <% } else { %>
+                            Chua co file cookies. Vui long upload file .cookies.json
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-upload me-2"></i>Upload Cookies
+            </div>
+            <div class="card-body">
+                <form action="/admin/cookies/upload" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="cookiesFile" class="form-label">Chon file .json</label>
+                        <input type="file" class="form-control" id="cookiesFile" name="cookiesFile" accept=".json,application/json" required>
+                        <div class="form-text">Chi chap nhan file JSON (toi da 1MB)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload me-2"></i>Upload
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-question-circle me-2"></i>Huong dan
+            </div>
+            <div class="card-body">
+                <h6>Dinh dang file cookies:</h6>
+                <p>File phai la JSON chua mang cac cookie objects voi cac truong bat buoc:</p>
+                <ul>
+                    <li><code>name</code> - Ten cookie</li>
+                    <li><code>value</code> - Gia tri cookie</li>
+                    <li><code>domain</code> - Domain cua cookie</li>
+                </ul>
+                <p class="mb-0">Cac truong khac (path, secure, httpOnly, sameSite) la tuy chon.</p>
+            </div>
+        </div>
+    </div>
+</div>
+

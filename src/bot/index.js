@@ -15,6 +15,9 @@ const { withdrawHandler, processWithdrawInput, confirmWithdrawCallback, cancelWi
 const { setupBankCallback, processBankInput } = require('./handlers/bank-handler');
 const { submitOrderHandler, processOrderInput } = require('./handlers/order-handler');
 
+// Callbacks
+const { handleSubmitOrderCallback } = require('./callbacks/submit-order-callback');
+
 let botInstance = null;
 
 function createBot() {
@@ -49,6 +52,7 @@ function createBot() {
     bot.action('setup_bank', setupBankCallback);
     bot.action('confirm_withdraw', confirmWithdrawCallback);
     bot.action('cancel_withdraw', cancelWithdrawCallback);
+    bot.action('submit_order', handleSubmitOrderCallback);
 
     // Text message handler
     bot.on('text', async (ctx) => {

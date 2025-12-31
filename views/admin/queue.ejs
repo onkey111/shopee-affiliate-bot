@@ -1,0 +1,215 @@
+<h2 class="mb-4">Queue Management</h2>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <h6 class="text-muted">Waiting</h6>
+                <h3 id="stat-waiting"><%= metrics?.queue?.waiting || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card primary">
+            <div class="card-body">
+                <h6 class="text-muted">Active</h6>
+                <h3 id="stat-active"><%= metrics?.queue?.active || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h6 class="text-muted">Completed (24h)</h6>
+                <h3 id="stat-completed"><%= metrics?.database?.completed || 0 %></h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <h6 class="text-muted">Failed (24h)</h6>
+                <h3 id="stat-failed"><%= metrics?.database?.failed || 0 %></h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Queue Controls -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Queue Controls</div>
+            <div class="card-body">
+                <button id="btn-pause" class="btn btn-warning me-2">
+                    <i class="bi bi-pause-fill"></i> Pause Queue
+                </button>
+                <button id="btn-resume" class="btn btn-success me-2">
+                    <i class="bi bi-play-fill"></i> Resume Queue
+                </button>
+                <button id="btn-clean" class="btn btn-secondary">
+                    <i class="bi bi-trash"></i> Clean Old Jobs
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Dead Letter Queue (<span id="dlq-count"><%= deadLetterCount || 0 %></span>)</div>
+            <div class="card-body">
+                <button id="btn-view-dlq" class="btn btn-outline-danger me-2">
+                    <i class="bi bi-eye"></i> View Dead Letters
+                </button>
+                <button id="btn-purge-dlq" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Purge Old (7 days)
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Jobs Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Recent Jobs</span>
+        <button id="btn-refresh" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>URL</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="jobs-table">
+                    <% if (recentJobs && recentJobs.length > 0) { %>
+                        <% recentJobs.forEach(job => { %>
+                        <tr>
+                            <td><%= job.id %></td>
+                            <td><%= job.first_name || job.user_id %></td>
+                            <td>
+                                <span class="badge bg-<%= job.status === 'completed' ? 'success' : job.status === 'failed' ? 'danger' : job.status === 'processing' ? 'primary' : 'warning' %>">
+                                    <%= job.status %>
+                                </span>
+                            </td>
+                            <td class="text-truncate" style="max-width: 200px;" title="<%= job.original_url %>">
+                                <%= job.original_url %>
+                            </td>
+                            <td><%= new Date(job.created_at).toLocaleString('vi-VN') %></td>
+                            <td>
+                                <% if (job.status === 'failed') { %>
+                                <button class="btn btn-sm btn-outline-primary btn-retry" data-id="<%= job.id %>">
+                                    Retry
+                                </button>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr><td colspan="6" class="text-center">No jobs found</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Dead Letter Modal -->
+<div class="modal fade" id="dlqModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dead Letter Jobs</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="dlq-content">Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Pause queue
+    document.getElementById('btn-pause').addEventListener('click', async () => {
+        if (!confirm('Pause the queue?')) return;
+        const res = await fetch('/admin/queue/pause', { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || data.error);
+    });
+
+    // Resume queue
+    document.getElementById('btn-resume').addEventListener('click', async () => {
+        const res = await fetch('/admin/queue/resume', { method: 'POST' });
+        const data = await res.json();
+        alert(data.message || data.error);
+    });
+
+    // Clean queue
+    document.getElementById('btn-clean').addEventListener('click', async () => {
+        if (!confirm('Clean completed jobs older than 1 hour?')) return;
+        const res = await fetch('/admin/queue/clean', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ grace: 3600000, type: 'all' })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+    });
+
+    // View dead letter
+    document.getElementById('btn-view-dlq').addEventListener('click', async () => {
+        const modal = new bootstrap.Modal(document.getElementById('dlqModal'));
+        document.getElementById('dlq-content').innerHTML = 'Loading...';
+        modal.show();
+        
+        const res = await fetch('/admin/queue/dead-letter');
+        const data = await res.json();
+        
+        if (data.success && data.data.jobs.length > 0) {
+            let html = '<table class="table table-sm"><thead><tr><th>ID</th><th>URL</th><th>Error</th><th>Action</th></tr></thead><tbody>';
+            data.data.jobs.forEach(job => {
+                html += `<tr><td>${job.original_job_id}</td><td class="text-truncate" style="max-width:150px">${job.original_url}</td><td>${job.error_message || '-'}</td><td><button class="btn btn-sm btn-primary" onclick="retryDLQ(${job.original_job_id})">Retry</button></td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('dlq-content').innerHTML = html;
+        } else {
+            document.getElementById('dlq-content').innerHTML = '<p class="text-center">No dead letter jobs</p>';
+        }
+    });
+
+    // Purge dead letter
+    document.getElementById('btn-purge-dlq').addEventListener('click', async () => {
+        if (!confirm('Purge dead letter jobs older than 7 days?')) return;
+        const res = await fetch('/admin/queue/dead-letter/purge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ days: 7 })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        location.reload();
+    });
+
+    // Refresh
+    document.getElementById('btn-refresh').addEventListener('click', () => location.reload());
+});
+
+async function retryDLQ(id) {
+    const res = await fetch(`/admin/queue/dead-letter/${id}/retry`, { method: 'POST' });
+    const data = await res.json();
+    alert(data.message || data.error);
+    location.reload();
+}
+</script>
+

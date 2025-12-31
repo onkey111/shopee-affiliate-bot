@@ -11,6 +11,7 @@ const dashboardRoutes = require('./routes/dashboard');
 const ordersRoutes = require('./routes/orders');
 const withdrawalsRoutes = require('./routes/withdrawals');
 const usersRoutes = require('./routes/users');
+const cookiesRoutes = require('./routes/cookies');
 
 function createAdminApp() {
     const app = express();
@@ -53,6 +54,7 @@ function createAdminApp() {
     app.use('/admin/orders', requireAuth, ordersRoutes);
     app.use('/admin/withdrawals', requireAuth, withdrawalsRoutes);
     app.use('/admin/users', requireAuth, usersRoutes);
+    app.use('/admin/cookies', requireAuth, cookiesRoutes);
 
     app.get('/admin', (req, res) => {
         if (req.session.user) {

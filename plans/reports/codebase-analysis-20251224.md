@@ -319,7 +319,7 @@ shopee-bot-tele-aff/
   db: { connectionString, host, port, database, user, password },
   admin: { user, password, sessionSecret },
   app: { env, port },
-  limits: { dailyLinks: 5, minWithdraw: 100000 },
+  limits: { dailyLinks: 100, minWithdraw: 100000 },
   commission: { owner: 0.5, user: 0.4, referrer: 0.1 }
 }
 ```

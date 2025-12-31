@@ -1,3 +1,4 @@
+const { Markup } = require('telegraf');
 const userService = require('../../services/user-service');
 const linkService = require('../../services/link-service');
 const { mainMenu, cancelMenu } = require('../keyboards');
@@ -11,13 +12,15 @@ async function createLinkHandler(ctx) {
     }
 
     const remaining = await linkService.getRemainingLinks(profile.id);
-    if (remaining <= 0) {
+    // remaining = -1 means unlimited, remaining = 0 means limit reached
+    if (remaining === 0) {
         return ctx.reply('❌ Ban da het luot tao link hom nay! Vui long quay lai ngay mai.', mainMenu);
     }
 
     ctx.session.step = 'awaiting_link';
+    const remainingText = remaining === -1 ? 'Khong gioi han' : `${remaining} luot hom nay`;
     await ctx.reply(
-        `🔗 *Tao link affiliate*\n\nGui link san pham Shopee de chuyen doi.\n\n📌 Con lai: ${remaining} luot hom nay`,
+        `🔗 *Tao link affiliate*\n\nGui link san pham Shopee de chuyen doi.\n\n📌 Con lai: ${remainingText}`,
         { parse_mode: 'Markdown', ...cancelMenu }
     );
 }
@@ -45,10 +48,17 @@ async function processLinkInput(ctx) {
         ctx.session.step = 'idle';
 
         const remaining = await linkService.getRemainingLinks(profile.id);
-        
+        const remainingText = remaining === -1 ? 'Khong gioi han' : `${remaining} luot hom nay`;
+
+        // Create inline keyboard with clickable URL button and Submit Order ID button
+        const keyboard = Markup.inlineKeyboard([
+            [Markup.button.url('🔗 Mo link affiliate', link.affiliate_url)],
+            [Markup.button.callback('📦 Gui Order ID', 'submit_order')]
+        ]);
+
         await ctx.reply(
-            `✅ *Tao link thanh cong!*\n\n🔗 *Link affiliate:*\n\`${link.affiliate_url}\`\n\n📌 Con lai: ${remaining} luot hom nay`,
-            { parse_mode: 'Markdown', ...mainMenu }
+            `✅ *Tao link thanh cong!*\n\n📌 Con lai: ${remainingText}\n\n📝 Sau khi mua hang, nhan nut ben duoi de gui Order ID.`,
+            { parse_mode: 'Markdown', ...mainMenu, ...keyboard }
         );
     } catch (err) {
         logger.error('Link creation failed', { error: err.message, userId: profile.id });
