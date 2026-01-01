@@ -15,7 +15,7 @@ const validators = {
         return patterns.some(p => p.test(url));
     },
     isOrderId(text) {
-        return /^\d{10,25}$/.test(text.trim());
+        return /^[a-zA-Z0-9]{10,25}$/.test(text.trim());
     },
     extractShopeeUrl(text) {
         if (!text || typeof text !== 'string') return null;

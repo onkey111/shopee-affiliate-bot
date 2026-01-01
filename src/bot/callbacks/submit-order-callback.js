@@ -28,7 +28,7 @@ async function handleSubmitOrderCallback(ctx) {
         ctx.session.step = 'awaiting_order_id';
 
         await ctx.reply(
-            `📦 *Gui ma don hang*\n\nNhap ma don hang Shopee (10-25 so) de nhan hoa hong.\n\n📌 Luu y: Chi gui don hang da mua qua link affiliate cua ban.`,
+            `📦 *Gui ma don hang*\n\nNhap ma don hang Shopee (10-25 ky tu) de nhan hoa hong.\n\n📌 Luu y: Chi gui don hang da mua qua link affiliate cua ban.`,
             { parse_mode: 'Markdown', ...cancelMenu }
         );
 
