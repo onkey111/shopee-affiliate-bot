@@ -7,17 +7,17 @@ const { currency, datetime } = require('../../utils/formatters');
 async function historyCommand(ctx) {
     const profile = await userService.getUserProfile(ctx.from.id);
     if (!profile) {
-        return ctx.reply('Vui long /start truoc!');
+        return ctx.reply('Vui lòng /start trước!');
     }
 
     const orders = await orderService.getUserOrders(profile.id);
     const withdrawals = await withdrawalService.getUserWithdrawals(profile.id);
 
-    let msg = '📋 *Lich su giao dich*\n\n';
+    let msg = '📋 *Lịch sử giao dịch*\n\n';
 
-    msg += '📦 *Don hang gan day:*\n';
+    msg += '📦 *Đơn hàng gần đây:*\n';
     if (orders.length === 0) {
-        msg += '_Chua co don hang nao_\n';
+        msg += '_Chưa có đơn hàng nào_\n';
     } else {
         orders.slice(0, 5).forEach((o, i) => {
             const statusIcon = o.status === 'approved' ? '✅' : o.status === 'rejected' ? '❌' : '⏳';
@@ -25,9 +25,9 @@ async function historyCommand(ctx) {
         });
     }
 
-    msg += '\n💸 *Rut tien gan day:*\n';
+    msg += '\n💸 *Rút tiền gần đây:*\n';
     if (withdrawals.length === 0) {
-        msg += '_Chua co yeu cau rut tien nao_\n';
+        msg += '_Chưa có yêu cầu rút tiền nào_\n';
     } else {
         withdrawals.slice(0, 5).forEach((w, i) => {
             const statusIcon = w.status === 'completed' ? '✅' : w.status === 'rejected' ? '❌' : '⏳';

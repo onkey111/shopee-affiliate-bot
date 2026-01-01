@@ -4,28 +4,28 @@ const { mainMenu } = require('../keyboards');
 async function referralCommand(ctx) {
     const profile = await userService.getUserProfile(ctx.from.id);
     if (!profile) {
-        return ctx.reply('Vui long /start truoc!');
+        return ctx.reply('Vui lòng /start trước!');
     }
 
     const botUsername = ctx.botInfo.username;
     const refLink = `https://t.me/${botUsername}?start=${profile.ref_code}`;
 
     const msg = `
-👥 *Chuong trinh gioi thieu*
+👥 *Chương trình giới thiệu*
 
-🔗 *Link gioi thieu cua ban:*
+🔗 *Link giới thiệu của bạn:*
 \`${refLink}\`
 
-📋 *Ma gioi thieu:* \`${profile.ref_code}\`
+📋 *Mã giới thiệu:* \`${profile.ref_code}\`
 
-👥 *So nguoi da gioi thieu:* ${profile.referral_count || 0}
+👥 *Số người đã giới thiệu:* ${profile.referral_count || 0}
 
-💰 *Hoa hong gioi thieu:* 10% hoa hong tu moi don hang cua nguoi ban gioi thieu!
+💰 *Hoa hồng giới thiệu:* 10% hoa hồng từ mỗi đơn hàng của người bạn giới thiệu!
 
-📌 *Cach chia se:*
-1. Copy link gioi thieu phia tren
-2. Gui cho ban be
-3. Khi ho dang ky va co don hang, ban se nhan hoa hong!
+📌 *Cách chia sẻ:*
+1. Copy link giới thiệu phía trên
+2. Gửi cho bạn bè
+3. Khi họ đăng ký và có đơn hàng, bạn sẽ nhận hoa hồng!
 `;
 
     await ctx.reply(msg, { parse_mode: 'Markdown', ...mainMenu });

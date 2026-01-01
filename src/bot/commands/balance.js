@@ -5,18 +5,18 @@ const { currency } = require('../../utils/formatters');
 async function balanceCommand(ctx) {
     const profile = await userService.getUserProfile(ctx.from.id);
     if (!profile) {
-        return ctx.reply('Vui long /start truoc!');
+        return ctx.reply('Vui lòng /start trước!');
     }
 
     const msg = `
-💰 *So du tai khoan*
+💰 *Số dư tài khoản*
 
-So du hien tai: *${currency(profile.balance)}*
+Số dư hiện tại: *${currency(profile.balance)}*
 
-📌 Rut tien toi thieu: 100,000d
-🏦 Ngan hang: ${profile.bank_account ? `${profile.bank_account.bank_name} - ${profile.bank_account.account_number}` : 'Chua thiet lap'}
+📌 Rút tiền tối thiểu: 100,000đ
+🏦 Ngân hàng: ${profile.bank_account ? `${profile.bank_account.bank_name} - ${profile.bank_account.account_number}` : 'Chưa thiết lập'}
 
-Bam "🏦 Rut tien" de rut tien ve tai khoan!
+Bấm "🏦 Rút tiền" để rút tiền về tài khoản!
 `;
 
     await ctx.reply(msg, { parse_mode: 'Markdown', ...mainMenu });

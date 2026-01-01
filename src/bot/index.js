@@ -29,7 +29,7 @@ function createBot() {
 
     bot.catch((err, ctx) => {
         logger.error('Bot error', { error: err.message, update: ctx.updateType });
-        ctx.reply('Co loi xay ra. Vui long thu lai /start').catch(() => {});
+        ctx.reply('Có lỗi xảy ra. Vui lòng thử lại /start').catch(() => {});
     });
 
     // Commands
@@ -40,13 +40,13 @@ function createBot() {
     bot.command('history', historyCommand);
 
     // Menu buttons
-    bot.hears('🔗 Tao link', createLinkHandler);
-    bot.hears('📦 Gui don', submitOrderHandler);
-    bot.hears('📊 Thong ke', statsCommand);
-    bot.hears('💰 So du', balanceCommand);
-    bot.hears('🏦 Rut tien', withdrawHandler);
-    bot.hears('👥 Gioi thieu', referralCommand);
-    bot.hears('📋 Lich su', historyCommand);
+    bot.hears('🔗 Tạo link', createLinkHandler);
+    bot.hears('📦 Gửi đơn', submitOrderHandler);
+    bot.hears('📊 Thống kê', statsCommand);
+    bot.hears('💰 Số dư', balanceCommand);
+    bot.hears('🏦 Rút tiền', withdrawHandler);
+    bot.hears('👥 Giới thiệu', referralCommand);
+    bot.hears('📋 Lịch sử', historyCommand);
 
     // Callbacks
     bot.action('setup_bank', setupBankCallback);

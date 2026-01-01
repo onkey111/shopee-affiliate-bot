@@ -6,24 +6,24 @@ const { currency } = require('../../utils/formatters');
 async function statsCommand(ctx) {
     const profile = await userService.getUserProfile(ctx.from.id);
     if (!profile) {
-        return ctx.reply('Vui long /start truoc!');
+        return ctx.reply('Vui lòng /start trước!');
     }
 
     const stats = await orderService.getUserStats(profile.id);
 
     const msg = `
-📊 *Thong ke cua ban*
+📊 *Thống kê của bạn*
 
-📦 *Don hang:*
-• Da duyet: ${stats.approved_count || 0}
-• Dang cho: ${stats.pending_count || 0}
+📦 *Đơn hàng:*
+• Đã duyệt: ${stats.approved_count || 0}
+• Đang chờ: ${stats.pending_count || 0}
 
-💰 *Hoa hong:*
-• Tong hoa hong: ${currency(stats.total_commission || 0)}
-• So du hien tai: ${currency(profile.balance)}
+💰 *Hoa hồng:*
+• Tổng hoa hồng: ${currency(stats.total_commission || 0)}
+• Số dư hiện tại: ${currency(profile.balance)}
 
-🔗 *Link da tao:* ${profile.total_links || 0}
-👥 *Nguoi gioi thieu:* ${profile.referral_count || 0}
+🔗 *Link đã tạo:* ${profile.total_links || 0}
+👥 *Người giới thiệu:* ${profile.referral_count || 0}
 `;
 
     await ctx.reply(msg, { parse_mode: 'Markdown', ...mainMenu });

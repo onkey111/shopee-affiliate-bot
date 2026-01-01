@@ -1,23 +1,23 @@
 const { Markup } = require('telegraf');
 
 const mainMenu = Markup.keyboard([
-    ['🔗 Tao link', '📦 Gui don'],
-    ['📊 Thong ke', '💰 So du'],
-    ['🏦 Rut tien', '👥 Gioi thieu'],
-    ['📋 Lich su']
+    ['🔗 Tạo link', '📦 Gửi đơn'],
+    ['📊 Thống kê', '💰 Số dư'],
+    ['🏦 Rút tiền', '👥 Giới thiệu'],
+    ['📋 Lịch sử']
 ]).resize();
 
 const cancelMenu = Markup.keyboard([
-    ['❌ Huy']
+    ['❌ Hủy']
 ]).resize();
 
 const confirmWithdraw = Markup.inlineKeyboard([
-    [Markup.button.callback('✅ Xac nhan', 'confirm_withdraw')],
-    [Markup.button.callback('❌ Huy', 'cancel_withdraw')]
+    [Markup.button.callback('✅ Xác nhận', 'confirm_withdraw')],
+    [Markup.button.callback('❌ Hủy', 'cancel_withdraw')]
 ]);
 
 const bankSetupPrompt = Markup.inlineKeyboard([
-    [Markup.button.callback('🏦 Thiet lap ngan hang', 'setup_bank')]
+    [Markup.button.callback('🏦 Thiết lập ngân hàng', 'setup_bank')]
 ]);
 
 module.exports = {

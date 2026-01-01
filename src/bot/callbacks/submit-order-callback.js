@@ -20,7 +20,7 @@ async function handleSubmitOrderCallback(ctx) {
 
         const profile = await userService.getUserProfile(ctx.from.id);
         if (!profile) {
-            await ctx.reply('Vui long /start truoc!');
+            await ctx.reply('Vui lòng /start trước!');
             return;
         }
 
@@ -28,7 +28,7 @@ async function handleSubmitOrderCallback(ctx) {
         ctx.session.step = 'awaiting_order_id';
 
         await ctx.reply(
-            `📦 *Gui ma don hang*\n\nNhap ma don hang Shopee (10-25 ky tu) de nhan hoa hong.\n\n📌 Luu y: Chi gui don hang da mua qua link affiliate cua ban.`,
+            `📦 *Gửi mã đơn hàng*\n\nNhập mã đơn hàng Shopee (10-25 ký tự) để nhận hoa hồng.\n\n📌 Lưu ý: Chỉ gửi đơn hàng đã mua qua link affiliate của bạn.`,
             { parse_mode: 'Markdown', ...cancelMenu }
         );
 
@@ -41,7 +41,7 @@ async function handleSubmitOrderCallback(ctx) {
             error: err.message,
             userId: ctx.from?.id
         });
-        await ctx.answerCbQuery('Co loi xay ra. Vui long thu lai!');
+        await ctx.answerCbQuery('Có lỗi xảy ra. Vui lòng thử lại!');
     }
 }
 

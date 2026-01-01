@@ -22,35 +22,35 @@ function formatStatusMessage(job) {
     };
 
     const statusText = {
-        pending: 'Dang cho xu ly',
-        processing: 'Dang xu ly',
-        completed: 'Hoan thanh',
-        failed: 'That bai'
+        pending: 'Đang chờ xử lý',
+        processing: 'Đang xử lý',
+        completed: 'Hoàn thành',
+        failed: 'Thất bại'
     };
 
     const emoji = statusEmoji[job.status] || '❓';
-    const text = statusText[job.status] || 'Khong xac dinh';
+    const text = statusText[job.status] || 'Không xác định';
 
-    let message = `${emoji} *Trang thai yeu cau #${job.id}*\n\n`;
-    message += `📊 Trang thai: ${text}\n`;
-    message += `📎 Link goc: ${job.original_url.substring(0, 40)}...\n`;
-    message += `🕐 Tao luc: ${new Date(job.created_at).toLocaleString('vi-VN')}\n`;
+    let message = `${emoji} *Trạng thái yêu cầu #${job.id}*\n\n`;
+    message += `📊 Trạng thái: ${text}\n`;
+    message += `📎 Link gốc: ${job.original_url.substring(0, 40)}...\n`;
+    message += `🕐 Tạo lúc: ${new Date(job.created_at).toLocaleString('vi-VN')}\n`;
 
     if (job.status === 'completed' && job.affiliate_url) {
         // Note: Affiliate URL button is added separately as inline keyboard
-        message += `\n🔗 *Link affiliate:* Nhan nut ben duoi de mo`;
+        message += `\n🔗 *Link affiliate:* Nhấn nút bên dưới để mở`;
     }
 
     if (job.status === 'failed' && job.error_message) {
-        message += `\n⚠️ Loi: ${job.error_message.substring(0, 100)}`;
+        message += `\n⚠️ Lỗi: ${job.error_message.substring(0, 100)}`;
     }
 
     if (job.status === 'processing') {
-        message += `\n\n_Dang xu ly, vui long doi..._`;
+        message += `\n\n_Đang xử lý, vui lòng đợi..._`;
     }
 
     if (job.attempts > 0) {
-        message += `\n\n📈 So lan thu: ${job.attempts}`;
+        message += `\n\n📈 Số lần thử: ${job.attempts}`;
     }
 
     return message;
@@ -67,7 +67,7 @@ async function handleJobStatusCallback(ctx) {
         const jobId = parseInt(callbackData.split(':')[1]);
 
         if (isNaN(jobId)) {
-            await ctx.answerCbQuery('Ma yeu cau khong hop le!');
+            await ctx.answerCbQuery('Mã yêu cầu không hợp lệ!');
             return;
         }
 
@@ -75,7 +75,7 @@ async function handleJobStatusCallback(ctx) {
         const job = await jobRepo.findById(jobId);
 
         if (!job) {
-            await ctx.answerCbQuery('Khong tim thay yeu cau!');
+            await ctx.answerCbQuery('Không tìm thấy yêu cầu!');
             return;
         }
 
@@ -94,8 +94,8 @@ async function handleJobStatusCallback(ctx) {
         // Add clickable URL button if job is completed with affiliate URL
         if (job.status === 'completed' && job.affiliate_url) {
             const keyboard = Markup.inlineKeyboard([
-                [Markup.button.url('🔗 Mo link affiliate', job.affiliate_url)],
-                [Markup.button.callback('📦 Gui Order ID', 'submit_order')]
+                [Markup.button.url('🔗 Mở link affiliate', job.affiliate_url)],
+                [Markup.button.callback('📦 Gửi Order ID', 'submit_order')]
             ]);
             Object.assign(replyOptions, keyboard);
         }
@@ -114,7 +114,7 @@ async function handleJobStatusCallback(ctx) {
             error: err.message,
             callbackData: ctx.callbackQuery?.data
         });
-        await ctx.answerCbQuery('Co loi xay ra. Vui long thu lai!');
+        await ctx.answerCbQuery('Có lỗi xảy ra. Vui lòng thử lại!');
     }
 }
 

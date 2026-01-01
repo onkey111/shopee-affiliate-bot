@@ -14,7 +14,7 @@ async function setupBankCallback(ctx) {
     const bankList = BANKS.map((b, i) => `${i + 1}. ${b}`).join('\n');
     await ctx.answerCbQuery();
     await ctx.reply(
-        `🏦 *Thiet lap tai khoan ngan hang*\n\nChon ngan hang (nhap so hoac ten):\n\n${bankList}`,
+        `🏦 *Thiết lập tài khoản ngân hàng*\n\nChọn ngân hàng (nhập số hoặc tên):\n\n${bankList}`,
         { parse_mode: 'Markdown', ...cancelMenu }
     );
 }
@@ -23,10 +23,10 @@ async function processBankInput(ctx) {
     const step = ctx.session.step;
     const text = ctx.message.text;
 
-    if (text === '❌ Huy') {
+    if (text === '❌ Hủy') {
         ctx.session.step = 'idle';
         ctx.session.bankData = null;
-        return ctx.reply('Da huy.', mainMenu);
+        return ctx.reply('Đã hủy.', mainMenu);
     }
 
     if (step === 'awaiting_bank_name') {
@@ -38,24 +38,24 @@ async function processBankInput(ctx) {
 
         ctx.session.bankData.bankName = bankName;
         ctx.session.step = 'awaiting_account_number';
-        await ctx.reply('Nhap so tai khoan:', cancelMenu);
+        await ctx.reply('Nhập số tài khoản:', cancelMenu);
         return true;
     }
 
     if (step === 'awaiting_account_number') {
         if (!/^\d{6,20}$/.test(text.replace(/\s/g, ''))) {
-            return ctx.reply('❌ So tai khoan khong hop le! Vui long nhap lai:');
+            return ctx.reply('❌ Số tài khoản không hợp lệ! Vui lòng nhập lại:');
         }
 
         ctx.session.bankData.accountNumber = text.replace(/\s/g, '');
         ctx.session.step = 'awaiting_account_holder';
-        await ctx.reply('Nhap ten chu tai khoan (khong dau):', cancelMenu);
+        await ctx.reply('Nhập tên chủ tài khoản (không dấu):', cancelMenu);
         return true;
     }
 
     if (step === 'awaiting_account_holder') {
         if (text.length < 3) {
-            return ctx.reply('❌ Ten khong hop le! Vui long nhap lai:');
+            return ctx.reply('❌ Tên không hợp lệ! Vui lòng nhập lại:');
         }
 
         const profile = await userService.getUserProfile(ctx.from.id);
@@ -67,7 +67,7 @@ async function processBankInput(ctx) {
         ctx.session.bankData = null;
 
         await ctx.reply(
-            `✅ *Thiet lap thanh cong!*\n\n🏦 Ngan hang: ${bankName}\n💳 So TK: ${accountNumber}\n👤 Chu TK: ${text.toUpperCase()}`,
+            `✅ *Thiết lập thành công!*\n\n🏦 Ngân hàng: ${bankName}\n💳 Số TK: ${accountNumber}\n👤 Chủ TK: ${text.toUpperCase()}`,
             { parse_mode: 'Markdown', ...mainMenu }
         );
         return true;

@@ -14,22 +14,22 @@ async function startCommand(ctx) {
     const user = await userService.getOrCreateUser(telegramUser, referrerCode);
 
     const welcomeMsg = `
-🎉 *Chao mung ban den voi Shopee Affiliate Bot!*
+🎉 *Chào mừng bạn đến với Shopee Affiliate Bot!*
 
-👤 *Thong tin cua ban:*
-• Ten: ${user.telegram_first_name}
-• Ma gioi thieu: \`${user.ref_code}\`
-• So du: ${user.balance}d
+👤 *Thông tin của bạn:*
+• Tên: ${user.telegram_first_name}
+• Mã giới thiệu: \`${user.ref_code}\`
+• Số dư: ${user.balance}đ
 
-📌 *Huong dan su dung:*
-1. 🔗 *Tao link* - Chuyen doi link Shopee thanh link affiliate
-2. 📊 *Thong ke* - Xem thong ke don hang va hoa hong
-3. 💰 *So du* - Xem so du hien tai
-4. 🏦 *Rut tien* - Rut tien ve tai khoan ngan hang
-5. 👥 *Gioi thieu* - Lay link gioi thieu ban be
-6. 📋 *Lich su* - Xem lich su giao dich
+📌 *Hướng dẫn sử dụng:*
+1. 🔗 *Tạo link* - Chuyển đổi link Shopee thành link affiliate
+2. 📊 *Thống kê* - Xem thống kê đơn hàng và hoa hồng
+3. 💰 *Số dư* - Xem số dư hiện tại
+4. 🏦 *Rút tiền* - Rút tiền về tài khoản ngân hàng
+5. 👥 *Giới thiệu* - Lấy link giới thiệu bạn bè
+6. 📋 *Lịch sử* - Xem lịch sử giao dịch
 
-Chon chuc nang ben duoi de bat dau! 👇
+Chọn chức năng bên dưới để bắt đầu! 👇
 `;
 
     await ctx.reply(welcomeMsg, { parse_mode: 'Markdown', ...mainMenu });
