@@ -15,11 +15,18 @@ router.get('/', async (req, res) => {
         `);
         res.render('admin/users', {
             users: result.rows,
-            globalDailyLimit: config.limits.dailyLinks
+            burstLimit: config.limits.burstLimit,
+            burstWindowMinutes: config.limits.burstWindowMinutes,
+            cooldownMinutes: config.limits.cooldownMinutes
         });
     } catch (err) {
         req.flash('error', 'Loi tai du lieu');
-        res.render('admin/users', { users: [], globalDailyLimit: config.limits.dailyLinks });
+        res.render('admin/users', {
+            users: [],
+            burstLimit: config.limits.burstLimit,
+            burstWindowMinutes: config.limits.burstWindowMinutes,
+            cooldownMinutes: config.limits.cooldownMinutes
+        });
     }
 });
 
@@ -42,7 +49,9 @@ router.get('/:id', async (req, res) => {
             orders: ordersResult.rows,
             withdrawals: withdrawalsResult.rows,
             bankAccount: bankResult.rows[0],
-            globalDailyLimit: config.limits.dailyLinks
+            burstLimit: config.limits.burstLimit,
+            burstWindowMinutes: config.limits.burstWindowMinutes,
+            cooldownMinutes: config.limits.cooldownMinutes
         });
     } catch (err) {
         req.flash('error', 'Loi tai du lieu');
@@ -50,28 +59,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Update user's daily link limit
-router.post('/:id/daily-limit', async (req, res) => {
+// Update user's rate limit setting (unlimited or default)
+router.post('/:id/rate-limit', async (req, res) => {
     try {
         const userId = req.params.id;
-        const { daily_link_limit } = req.body;
+        const { rate_limit_setting } = req.body;
 
-        // Validate input
+        // Validate input: only 'default' (NULL) or 'unlimited' (0) allowed
         let limitValue = null;
-        if (daily_link_limit === '' || daily_link_limit === 'null') {
-            // Use global config (NULL)
-            limitValue = null;
-        } else if (daily_link_limit === '0' || daily_link_limit === 'unlimited') {
-            // Unlimited
+        if (rate_limit_setting === 'unlimited') {
             limitValue = 0;
-        } else {
-            const parsed = parseInt(daily_link_limit, 10);
-            if (isNaN(parsed) || parsed < 0) {
-                req.flash('error', 'Gia tri khong hop le');
-                return res.redirect(`/admin/users/${userId}`);
-            }
-            limitValue = parsed;
         }
+        // else keep NULL for default burst+cooldown behavior
 
         await db.query(
             'UPDATE users SET daily_link_limit = $1, updated_at = NOW() WHERE id = $2',

@@ -45,7 +45,10 @@ module.exports = {
         url: process.env.WEBHOOK_URL
     },
     limits: {
-        dailyLinks: 5,
+        // Burst + Cooldown rate limiting for link creation
+        burstLimit: 10,              // Max links in burst window
+        burstWindowMinutes: 60,      // Burst window duration (1 hour)
+        cooldownMinutes: 30,         // Cooldown between links after burst exhausted
         minWithdraw: 100000
     },
     commission: {

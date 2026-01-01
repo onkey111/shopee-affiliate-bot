@@ -35,14 +35,6 @@ const userRepo = {
         return result.rows[0];
     },
 
-    async updateDailyLinks(userId, count, date) {
-        await db.query(
-            `UPDATE users SET daily_links = $1, daily_links_date = $2, updated_at = NOW()
-             WHERE id = $3`,
-            [count, date, userId]
-        );
-    },
-
     async incrementTotalLinks(userId) {
         await db.query(
             `UPDATE users SET total_links = total_links + 1, updated_at = NOW()

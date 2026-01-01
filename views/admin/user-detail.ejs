@@ -18,53 +18,32 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-header">Gioi han link hang ngay</div>
+            <div class="card-header">Gioi han tao link (Burst + Cooldown)</div>
             <div class="card-body">
-                <p class="text-muted mb-2">Gioi han mac dinh: <strong><%= globalDailyLimit %></strong> link/ngay</p>
+                <p class="text-muted mb-2">
+                    Mac dinh: <strong><%= burstLimit %></strong> link/<%= burstWindowMinutes %> phut,
+                    sau do <strong>1 link/<%= cooldownMinutes %> phut</strong>
+                </p>
                 <p class="mb-3">
                     Trang thai hien tai:
-                    <% if (user.daily_link_limit === null || user.daily_link_limit === undefined) { %>
-                        <span class="badge bg-secondary">Mac dinh (<%= globalDailyLimit %>)</span>
-                    <% } else if (user.daily_link_limit === 0) { %>
+                    <% if (user.daily_link_limit === 0) { %>
                         <span class="badge bg-success">Khong gioi han</span>
                     <% } else { %>
-                        <span class="badge bg-primary"><%= user.daily_link_limit %> link/ngay</span>
+                        <span class="badge bg-secondary">Mac dinh (Burst + Cooldown)</span>
                     <% } %>
                 </p>
-                <form action="/admin/users/<%= user.id %>/daily-limit" method="POST">
+                <form action="/admin/users/<%= user.id %>/rate-limit" method="POST">
                     <div class="mb-3">
-                        <label class="form-label">Thiet lap gioi han moi:</label>
+                        <label class="form-label">Thiet lap gioi han:</label>
                         <div class="input-group">
-                            <select name="daily_link_limit" class="form-select" id="limitSelect" onchange="toggleCustomInput(this)">
-                                <option value="null" <%= (user.daily_link_limit === null || user.daily_link_limit === undefined) ? 'selected' : '' %>>Mac dinh (<%= globalDailyLimit %>)</option>
+                            <select name="rate_limit_setting" class="form-select">
+                                <option value="default" <%= (user.daily_link_limit !== 0) ? 'selected' : '' %>>Mac dinh (Burst + Cooldown)</option>
                                 <option value="unlimited" <%= user.daily_link_limit === 0 ? 'selected' : '' %>>Khong gioi han</option>
-                                <option value="custom" <%= (user.daily_link_limit !== null && user.daily_link_limit !== undefined && user.daily_link_limit > 0) ? 'selected' : '' %>>Tuy chinh...</option>
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3" id="customLimitDiv" style="display: <%= (user.daily_link_limit !== null && user.daily_link_limit !== undefined && user.daily_link_limit > 0) ? 'block' : 'none' %>;">
-                        <label class="form-label">So luong link/ngay:</label>
-                        <input type="number" name="custom_limit" id="customLimitInput" class="form-control" min="1" value="<%= (user.daily_link_limit !== null && user.daily_link_limit !== undefined && user.daily_link_limit > 0) ? user.daily_link_limit : '' %>" placeholder="Nhap so luong">
-                    </div>
-                    <button type="submit" class="btn btn-primary" onclick="prepareSubmit()">Cap nhat</button>
+                    <button type="submit" class="btn btn-primary">Cap nhat</button>
                 </form>
-                <script>
-                    function toggleCustomInput(select) {
-                        var customDiv = document.getElementById('customLimitDiv');
-                        customDiv.style.display = select.value === 'custom' ? 'block' : 'none';
-                    }
-                    function prepareSubmit() {
-                        var select = document.getElementById('limitSelect');
-                        if (select.value === 'custom') {
-                            var customInput = document.getElementById('customLimitInput');
-                            select.name = '';
-                            customInput.name = 'daily_link_limit';
-                        } else {
-                            select.name = 'daily_link_limit';
-                            document.getElementById('customLimitInput').name = '';
-                        }
-                    }
-                </script>
             </div>
         </div>
 
