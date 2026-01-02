@@ -179,18 +179,19 @@ async function notifyJobCompleted(job, affiliateUrl, remaining = null) {
 
     try {
         let message = `✅ *Link da duoc tao thanh cong!*\n\n`;
-        message += `📎 Link goc: ${originalUrl.substring(0, 50)}${originalUrl.length > 50 ? '...' : ''}\n`;
+        message += `📎 Link goc: ${originalUrl.substring(0, 50)}${originalUrl.length > 50 ? '...' : ''}\n\n`;
+        message += `🔗 *Link affiliate:*\n${affiliateUrl}\n\n`;
+        message += `Các bác copy link và dán vào trình duyệt chính (Chrome, Safari) hoặc mở trực tiếp trong app Shopee để không bị mất cashback hộ em nhé.`;
 
         if (remaining !== null) {
-            message += `\n📌 Con lai: ${remaining} luot hom nay`;
+            message += `\n\n📌 Con lai: ${remaining} luot hom nay`;
         }
 
         message += `\n\n📝 Sau khi mua hang, nhan nut ben duoi de gui Order ID.`;
         message += `\n\n_Ma yeu cau: #${jobId}_`;
 
-        // Create inline keyboard with clickable URL button and Submit Order ID button
+        // Create inline keyboard with Submit Order ID button only (affiliate link sent as plain text)
         const keyboard = Markup.inlineKeyboard([
-            [Markup.button.url('🔗 Mo link affiliate', affiliateUrl)],
             [Markup.button.callback('📦 Gui Order ID', 'submit_order')]
         ]);
 

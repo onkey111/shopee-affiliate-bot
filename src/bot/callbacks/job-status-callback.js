@@ -37,8 +37,8 @@ function formatStatusMessage(job) {
     message += `🕐 Tạo lúc: ${new Date(job.created_at).toLocaleString('vi-VN')}\n`;
 
     if (job.status === 'completed' && job.affiliate_url) {
-        // Note: Affiliate URL button is added separately as inline keyboard
-        message += `\n🔗 *Link affiliate:* Nhấn nút bên dưới để mở`;
+        message += `\n🔗 *Link affiliate:*\n${job.affiliate_url}`;
+        message += `\n\nCác bác copy link và dán vào trình duyệt chính (Chrome, Safari) hoặc mở trực tiếp trong app Shopee để không bị mất cashback hộ em nhé.`;
     }
 
     if (job.status === 'failed' && job.error_message) {
@@ -94,7 +94,6 @@ async function handleJobStatusCallback(ctx) {
         // Add clickable URL button if job is completed with affiliate URL
         if (job.status === 'completed' && job.affiliate_url) {
             const keyboard = Markup.inlineKeyboard([
-                [Markup.button.url('🔗 Mở link affiliate', job.affiliate_url)],
                 [Markup.button.callback('📦 Gửi Order ID', 'submit_order')]
             ]);
             Object.assign(replyOptions, keyboard);

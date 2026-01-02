@@ -76,14 +76,13 @@ async function processLinkInput(ctx) {
         const status = await linkService.getRemainingLinks(profile.id);
         const remainingText = formatRateLimitStatus(status);
 
-        // Create inline keyboard with clickable URL button and Submit Order ID button
+        // Create inline keyboard with Submit Order ID button only (affiliate link sent as plain text)
         const keyboard = Markup.inlineKeyboard([
-            [Markup.button.url('🔗 Mở link affiliate', link.affiliate_url)],
             [Markup.button.callback('📦 Gửi Order ID', 'submit_order')]
         ]);
 
         await ctx.reply(
-            `✅ *Tạo link thành công!*\n\n📌 Còn lại: ${remainingText}\n\n📝 Sau khi mua hàng, nhấn nút bên dưới để gửi Order ID.`,
+            `✅ *Tạo link thành công!*\n\n🔗 *Link affiliate:*\n${link.affiliate_url}\n\nCác bác copy link và dán vào trình duyệt chính (Chrome, Safari) hoặc mở trực tiếp trong app Shopee để không bị mất cashback hộ em nhé.\n\n📌 Còn lại: ${remainingText}\n\n📝 Sau khi mua hàng, nhấn nút bên dưới để gửi Order ID.`,
             { parse_mode: 'Markdown', ...mainMenu, ...keyboard }
         );
     } catch (err) {
