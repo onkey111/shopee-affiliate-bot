@@ -37,7 +37,7 @@ function formatStatusMessage(job) {
     message += `🕐 Tạo lúc: ${new Date(job.created_at).toLocaleString('vi-VN')}\n`;
 
     if (job.status === 'completed' && job.affiliate_url) {
-        message += `\n🔗 *Link affiliate:*\n${job.affiliate_url}`;
+        message += `\n🔗 *Link affiliate:*\n\`${job.affiliate_url}\``;
         message += `\n\nCác bác copy link và dán vào trình duyệt chính (Chrome, Safari) hoặc mở trực tiếp trong app Shopee để không bị mất cashback hộ em nhé.`;
     }
 
